@@ -1,0 +1,22 @@
+{% extends "list.html"%}
+{% block list_packages %}
+
+    {% with object_list as packages %}
+        {% if packages %}
+            {% for pkg in packages  %}
+                <dl>
+                    <dt><a href="package/{{ pkg.name }}">{{ pkg.name }}</a></dt>
+                    {%if pkg.summary %}
+                    <dd>
+                        {{ pkg.summary }}
+                    </dd>
+                    {% endif%}
+                </dl>
+            {% endfor %}
+        {% else %}
+            <p>Nothing found.</p>
+        {% endif %}
+    {% endwith %}
+{% endblock %}
+
+

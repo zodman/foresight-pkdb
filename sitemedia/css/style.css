@@ -1,0 +1,66 @@
+body {
+  color: #333;
+  font-family: "Liberation Sans", "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
+  font-size: 14px;
+}
+
+#container {
+  width: 777px;
+  margin: 0 auto;
+}
+
+
+div#footer {
+  color: grey;
+  font-size: smaller;
+  clear: left;
+  border-top: 1px solid grey;
+  padding-top: 10px;
+  margin-top: 20px;
+} 
+
+#sitename {
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+}
+
+#tagline {
+  font-size: 12px;
+  margin: -6px 0 0 20px;
+}
+
+#q {
+  border: 2px solid grey;
+  padding: 5px;
+  font-size: 18px;
+  margin: 1em 0;
+  width: 260px;
+}
+
+.initialInputText { 
+  color: grey;
+}
+
+a,
+a.link, 
+a.active {
+  color: #369;
+}
+
+.packagekit-plugin {
+  width: 30em;
+  height: 5em;
+}
+
+.welcome {
+  color: #333;
+  line-height: 1.4em;
+}
+#center {
+    text-align:center;
+}
+
+h4{
+    margin-left:30px;
+}

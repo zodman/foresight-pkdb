@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %} All Packages {% endblock %}
+{% block content %}
+
+<div id="left">
+
+<h1>Browse packages</h1>
+
+{% block list_packages %}
+
+
+{% endblock list_packages %}
+
+
+</div>
+<div id="center">
+{% block page %}
+
+   {% if page_obj.has_previous %}
+       <a href="?page={{page_obj.previous_page_number}}">prev</a>
+   {% endif %}
+    <b>{{page_obj.number|pprint}}</b>
+   {% if page_obj.has_next %}
+        <a href="?page={{page_obj.next_page_number}}">next</a>
+   {% endif %}
+
+{% endblock %}
+</div>
+{% endblock %}

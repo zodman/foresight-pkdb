@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>pkdb :: {% block title %}search{% endblock %}</title>
+    <link type="text/css" rel="stylesheet" href="/sitemedia/css/style.css" />
+    <script type="text/javascript" src="/sitemedia/js/jquery-1.3.1.min.js" /></script>
+    <script type="text/javascript" src="/sitemedia/js/pkdb.js"/></script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <div class="left">
+                <div id="sitename">pkdb</div>
+                <div id="tagline">find it...install it...<em>booya!</em></div>
+            </div>
+        </div>
+        <div id="main">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div id="footer">
+            <p>pkdb loves open source &middot; powered by django</p>
+        </div>
+    </div>
+</body>
+</html>

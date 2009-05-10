@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Search Results :: {{ query_string }} {% endblock %}
+{% block content %}
+
+<div id="left">
+
+<h1>Search results</h1>
+
+{% if packages %}
+    <p>Found {{ packages|length}} package{{ packages|length|pluralize }}
+        matching <b>{{ query_string }}</b>.</p>
+    {% for pkg in packages  %}
+    <dl>
+        <dt><a href="package/{{ pkg.id }}">{{ pkg.name }}</a></dt>
+        <dd>{{ pkg.short_desc }}</dd>
+    </dl>
+    {% endfor %}
+{% else %}
+    <p>Nothing found.</p>
+{% endif %}
+
+</div>
+
+{% endblock %}
