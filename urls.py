@@ -15,8 +15,9 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
      (r'^admin/(.*)', admin.site.root),
-     (r'^', include("fl.packages.url")),
-
+     (r'^', include("fl.packages.urls")),
+	 (r'^auth/$','django.views.generic.simple.redirect_to', { 'url':'/accounts/'}),
+	 (r'^accounts/', include("fl.auth.urls")),
      (r'^sitemedia/(.*)$', 'django.views.static.serve', {'document_root': mydir() + '/sitemedia', 'show_indexes': True}),
 
 

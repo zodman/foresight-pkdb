@@ -86,8 +86,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.databrowse',
     'django.contrib.admin',
-    'djangoratings',
+  #  'djangoratings',
     'fl.packages',
     'fl.metadata',
-    'fl.rating'
+ #   'fl.rating'
 )

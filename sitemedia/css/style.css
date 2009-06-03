@@ -64,3 +64,7 @@ a.active {
 h4{
     margin-left:30px;
 }
+#auth-form {
+	margin-right:0px;
+	margin-left:auto;
+}
