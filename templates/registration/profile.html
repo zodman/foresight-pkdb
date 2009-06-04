@@ -4,5 +4,14 @@
 
 <div id="left">
 <h1>Profile </h1>
+    <div id ="nbProfile"></div>
 </div>
+<script lang="javascript">
+var nb = new Notebook('nbProfile', {forceUpdate:true, allowBookmark:true} );
+nb.addPage( { 'id': "main", 'title':'Main'}, { 'url':'{% url fl.auth.views.index %}'});
+nb.addPage( { 'id': "pass", 'title':'Change Password'}, { 'url':'{% url fl.auth.views.password_change %}'});
+document.nbProfile = nb;
+
+</script>
+
 {% endblock %}
