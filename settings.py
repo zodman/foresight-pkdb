@@ -89,5 +89,6 @@ INSTALLED_APPS = (
   #  'djangoratings',
     'fl.packages',
     'fl.metadata',
+    'meteora'
  #   'fl.rating'
 )

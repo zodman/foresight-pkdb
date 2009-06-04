@@ -68,3 +68,12 @@ h4{
 	margin-right:0px;
 	margin-left:auto;
 }
+
+label {
+    font-size:small;
+}
+
+ul.errorlist li  {
+    font-size:small;
+    margin-bottom:0px;
+}

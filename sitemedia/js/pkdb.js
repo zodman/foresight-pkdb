@@ -9,7 +9,7 @@ Meteora.uses('Meteora.Dock');
 showDialogLogin = function () {
 	Meteora.overlay();
 	var dia = new Dialog(
-		{'url':'/accounts/login'},
+		{'url':'/accounts/login/'},
 		{
 			'height':150,
 			'width':360,
