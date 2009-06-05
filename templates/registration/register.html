@@ -1,0 +1,13 @@
+
+{% extends "base.html"%}
+{%block content %}
+<form onsubmit="return formSubmit(this)" action="{% url fl.auth.views.register %}" method="POST">
+<div id="div-register">
+    <table>
+    {{ form }}
+    </table>
+</div>
+<input type="Submit" value="Register">
+</form>
+
+{% endblock %}
