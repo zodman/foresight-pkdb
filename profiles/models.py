@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django import admin
+from django.contrib import admin
 
 from fl.packages.models import Package
 
 class Profile(models.Model):
-    # This is the only required field
     user = models.ForeignKey(User, unique=True)
-    packages = models.ManyToMany(Package)
+    packages = models.ManyToManyField(Package)
+    
+    def __unicode__(self):
+        return self.user.username
 
 admin.site.register(Profile)

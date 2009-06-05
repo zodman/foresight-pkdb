@@ -11,7 +11,7 @@ class Description(models.Model):
     value = models.TextField()
     
     def __unicode__(self):  
-        return self.valu
+        return self.value
 
 class Category(models.Model):
     name = models.CharField( max_length = 30)

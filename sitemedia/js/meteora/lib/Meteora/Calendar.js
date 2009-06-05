@@ -1,58 +1,896 @@
+/**
+ * Calendar
+ * Date picker
+ * ---
+ *  Written by José Carlos Nieto Jarquín <xiam@astrata.com.mx>
+ *
+ * Copyright (c) 2007-2009 Astrata Software S.A. de C.V.
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @author          José Carlos Nieto Jarquín
+ * @copyright       Copyright (c) 2007-2009, Astrata Software S.A. de C.V.
+ * @link            http://astrata.com.mx Astrata Open Source Projects
+ * @version         $Revision:$
+ * @modifiedby      $LastChangedBy:$
+ * @lastmodified    $Date:$
+ * @license         http://www.opensource.org/licenses/mit-license.php The MIT License
+ *
+ */
 
-var Calendar=new Class({'Implements':[Control],'initialize':function(el,options){this.options={'variant':0,'blank':false,'displayFormat':'%Y-%m-%d','storeFormat':'%Y-%m-%d','showHour':false,'showMinute':false,'showSecond':false,'showMeridiem':false,'firstWeekDay':1,'minYear':new Date().getFullYear()-1,'maxYear':new Date().getFullYear()+3}
-if(options.format){options.storeFormat=options.displayFormat=options.format;}
-this.setMainElement(el);this.setOptions(options);this.__import();this.__buildComponents();this.__draw();if(this.options.blank&&this.element.value==''){this.components.clone='';}
-this.__bindEvents();},'__zeroize':function(val){val=new String(val);while(val.length<2){val='0'+val;}
-return val;},'hide':function(){this.components.toolbox.hide();},'show':function(){this.components.toolbox.show();},'dayNames':[__('Sunday'),__('Monday'),__('Tuesday'),__('Wednesday'),__('Thursday'),__('Friday'),__('Saturday')],'monthNames':[__('January'),__('February'),__('March'),__('April'),__('May'),__('June'),__('July'),__('August'),__('September'),__('October'),__('November'),__('December')],'patterns':{'Y':'(\\d{4})','m':'(\\d{2})','d':'(\\d{2})','H':'(\\d{2})','i':'(\\d{2})','s':'(\\d{2})','j':'(\\d+)','g':'(\\d+)','h':'(\\d+)','n':'(\\d+)','k':'(\\d+)','z':'(\\d+)','a':'([apm]+)','G':'(\\d+)','A':'([APM]+)'},'__export':function(){this.__exportDate(this.options.displayFormat,this.components.clone);this.__exportDate(this.options.storeFormat,this.element);if(this.element.onchange){this.element.onchange(this.element);}},'__exportDate':function(format,el){this.__map={'Y':new Number(this.date['year']),'n':new Number(this.date['month']),'j':new Number(this.date['day']),'G':new Number(this.date['hour']),'k':new Number(this.date['minute']),'z':new Number(this.date['second']),'a':this.components.meridianInput.value==1?'pm':'am'}
-this.__map['g']=this.__map['G'];if(this.__map['G']>12){this.__map['a']='pm';this.__map['g']-=12;}
-$extend(this.__map,{'d':this.__zeroize(this.__map['j']),'m':this.__zeroize(this.__map['n']),'H':this.__zeroize(this.__map['G']),'h':this.__zeroize(this.__map['g']),'i':this.__zeroize(this.__map['k']),'s':this.__zeroize(this.__map['z']),'A':this.__map['a'].toUpperCase()});var result=format;for(var i in this.__map){if(result.match('%'+i)){switch(i){case'H':case'h':this.options.showHour=true;break;case'i':case'k':this.options.showMinute=true;break;case's':case'z':this.options.showSecond=true;break;case'a':case'A':this.options.showMeridiem=true;break;}
-result=result.replace('%'+i,this.__map[i]);}}
-el.value=result;},'__monthYearInputChange':function(){var data=this.components.monthYearInput.value.split('.');this.date['year']=parseInt(data[0]);this.date['month']=parseInt(data[1]);this.__draw();},'__yearInputChange':function(){this.date['year']=parseInt(this.components.yearInput.value);this.__draw();},'__monthInputChange':function(){this.date['month']=parseInt(this.components.monthInput.value)+1;this.__draw();},'__hourInputChange':function(){this.date['hour']=parseInt(this.components.hourInput.value);if(this.components.meridianInput.value==1){this.date['hour']=(this.date['hour']+12)%24;}
-this.__draw();},'__minuteInputChange':function(){this.date['minute']=parseInt(this.components.minuteInput.value);this.__draw();},'__secondInputChange':function(){this.date['second']=parseInt(this.components.secondInput.value);this.__draw();},'__meridianInputChange':function(){if(this.components.meridianInput.value==1){this.date['hour']=(this.date['hour']+12)%24;}else{this.date['hour']=(this.date['hour']-12)%24;}
-this.__draw();},'__buttonNextClick':function(){switch(this.options.variant){case 1:var o=this.components.monthYearInput.value;var t=o.split('.');t[1]=parseInt(t[1])+1;if(t[1]>11){t[0]=parseInt(t[0])+1;t[1]=0;}
-this.components.monthYearInput.value=t.join('.');if(!this.components.monthYearInput.value){this.components.monthYearInput.value=o;}
-this.components.monthYearInput.fireEvent('change');break;default:this.__monthWidget.up();if(this.__monthWidget.getValue()==0){this.__yearWidget.up();}
-break;}},'__buttonPrevClick':function(){switch(this.options.variant){case 1:var o=this.components.monthYearInput.value;var t=o.split('.');t[1]=parseInt(t[1])-1;if(t[1]<0){t[0]=parseInt(t[0])-1;t[1]=0;}
-this.components.monthYearInput.value=t.join('.');if(!this.components.monthYearInput.value){this.components.monthYearInput.value=o;}
-this.components.monthYearInput.fireEvent('change');break;default:this.__monthWidget.down();if(this.__monthWidget.getValue()==11){this.__yearWidget.down();}
-break;}},'__buttonTodayClick':function(){this.__setDefaultDate();this.__draw();},'__elementFocus':function(e){e=new Event(e);if(!this.components.toolbox){this.components.toolbox=new Toolbox(this.components.container,{'enableDrag':false});}
-var pos=$(e.target).getPosition();this.components.toolbox.moveTo(pos.y,pos.x);this.components.clone.blur();if(Browser.Engine.trident){this.__draw();}
-this.components.toolbox.resizeTo(this.element.offsetWidth,this.element.offsetHeight);this.show();},'__buttonBlankClick':function(){this.components.clone.value='';this.element.value='';this.hide();},'__buttonCloseClick':function(){this.hide();},'__frameMouseDown':function(e){e=new Event(e);var parent=$(e.target).findParentWithName('td');if(parent&&parent.retrieve('value')){this.pointer.className='day';this.pointer=parent;this.pointer.className='today';this.date['day']=parent.retrieve('value');this.__export();this.hide();}},'__bindEvents':function(){switch(this.options.variant){case 1:this.addListener(this.components.monthYearInput,'change',this.__monthYearInputChange);this.addListener(this.components.hourInput,'change',this.__hourInputChange);this.addListener(this.components.minuteInput,'change',this.__minuteInputChange);this.addListener(this.components.secondInput,'change',this.__secondInputChange);this.addListener(this.components.meridianInput,'change',this.__meridianInputChange);break;}
-this.addListener(this.components.buttonNext,'click',this.__buttonNextClick);this.addListener(this.components.buttonPrev,'click',this.__buttonPrevClick);this.addListener(this.components.buttonToday,'click',this.__buttonTodayClick);this.addListener(this.components.buttonBlank,'click',this.__buttonBlankClick);this.addListener(this.components.clone,'focus',this.__elementFocus);this.addListener(this.components.frame,'mousedown',this.__frameMouseDown);},'__buildComponents':function(){this.components={'container':Widget.table({'class':'m-calendar'}),'date':Widget.div({'class':'date'}),'buttonPrev':Widget.div({'class':'m-control'},Widget.fromHTML('&laquo;')),'buttonNext':Widget.div({'class':'m-control'},Widget.fromHTML('&raquo;')),'buttonBlank':Widget.button({'class':'m-form-button'},__('Clear')),'buttonClose':Widget.button({'class':'m-form-button m-button-close'},__('Close')),'buttonToday':Widget.button({'class':'m-form-button'},__('Today')),'frame':Widget.div({'class':'m-frame'}),'grid':Widget.table({'class':'grid'}),'buttons':Widget.div({'class':'buttons'}),'clone':this.element.cloneNode(true)};this.components.clone.removeAttribute('id');this.components.clone.removeAttribute('name');this.element.parentNode.insertBefore(this.components.clone,this.element);this.components.clone.setProperty('readonly','readonly');this.element.hide();switch(this.options.variant){case 1:$extend(this.components,{'monthYearInput':Widget.select({'class':'m-form-input'}),'hourInput':Widget.select({'class':'m-form-input'}),'minuteInput':Widget.select({'class':'m-form-input'}),'meridianInput':Widget.select({'class':'m-form-input'}),'secondInput':Widget.select({'class':'m-form-input'})});break;default:$extend(this.components,{'yearInput':Widget.input({'class':'m-form-input','size':4,'maxlength':4}),'monthInput':Widget.input({'class':'m-form-input','size':3,'maxlength':3}),'hourInput':Widget.input({'class':'m-form-input','size':2,'maxlength':2}),'minuteInput':Widget.input({'class':'m-form-input','size':2,'maxlength':2}),'meridianInput':Widget.input({'class':'m-form-input','size':2,'maxlength':2}),'secondInput':Widget.input({'class':'m-form-input','size':2,'maxlength':2})});break;}
-this.components.container.appendChildren([Widget.thead({'class':'head'},Widget.tr(null,function(){var els=[];els.push(Widget.td({style:{textAlign:'left',verticalAlign:'middle'}},this.components.buttonPrev));switch(this.options.variant){case 1:els.push(Widget.td({colspan:2,style:{textAlign:'center'}},this.components.monthYearInput));break;default:els.push(Widget.td({style:{textAlign:'center'}},this.components.monthInput));els.push(Widget.td({style:{textAlign:'center'}},this.components.yearInput));break;}
-els.push(Widget.td({style:{textAlign:'right',verticalAlign:'middle'}},this.components.buttonNext));return els;}.bind(this).call())),Widget.tbody({'class':'body'},[Widget.tr({'class':'main',style:{textAlign:'center'}},Widget.td({colspan:4},this.components.frame)),Widget.tr({'class':'head'},[Widget.td(null,this.components.hourInput),Widget.td(null,this.components.minuteInput),Widget.td(null,this.components.secondInput),Widget.td(null,this.components.meridianInput)]),Widget.tr(null,[Widget.td({colspan:4},[this.components.buttonBlank,this.components.buttonToday])])])]);switch(this.options.variant){case 1:for(var y=this.options.minYear;y<=this.options.maxYear;y++){for(var m=0;m<12;m++){this.components.monthYearInput.appendChild(Widget.option({value:y+'.'+m},this.monthNames[m].substr(0,3)+' '+y));}}
-for(var i=0;i<60;i++){this.components.minuteInput.appendChild(Widget.option({value:i},i<10?'0'+i:i));this.components.secondInput.appendChild(Widget.option({value:i},i<10?'0'+i:i));}
-for(var i=1;i<=12;i++){this.components.hourInput.appendChild(Widget.option({value:i},i<10?'0'+i:i));}
-this.components.meridianInput.appendChildren([Widget.option({value:0},'AM'),Widget.option({value:1},'PM')]);break;default:this.__yearWidget=new Spinbutton(this.components.yearInput,{'defaultValue':this.date['year'],'minValue':this.options.minYear,'maxValue':this.options.maxYear,'step':1,'onChange':this.__yearInputChange.bind(this)});this.__monthWidget=new Spinbutton(this.components.monthInput,{'values':function(){var values=[];for(var i=0;i<12;i++){values[i]=this.monthNames[i].substr(0,3);}
-return values;}.bind(this).call(),'cycle':true,'onChange':this.__monthInputChange.bind(this)});this.__hourWidget=new Spinbutton(this.components.hourInput,{'minValue':1,'maxValue':12,'defaultValue':12,'values':function(){var hours=[];for(var i=1;i<=12;i++){hours[i]=new String(i<10?'0'+i:i);}
-return hours;}.call(),'cycle':true,'onChange':this.__hourInputChange.bind(this)});this.__minuteWidget=new Spinbutton(this.components.minuteInput,{'values':function(){var m=[];for(var i=0;i<60;i++)
-m[i]=new String(i<10?'0'+i:i);return m;}.call(),'cycle':true,'onChange':this.__minuteInputChange.bind(this)});this.__secondWidget=new Spinbutton(this.components.secondInput,{'values':function(){var m=[];for(var i=0;i<60;i++){m[i]=new String(i<10?'0'+i:i);}
-return m;}.call(),'step':5,'cycle':true,'onChange':this.__secondInputChange.bind(this)});this.__meridianWidget=new Spinbutton(this.components.meridianInput,{'values':['AM','PM'],'cycle':true,'defaultValue':0,'onChange':this.__meridianInputChange.bind(this)});break;}
-this.components.frame.appendChild(this.components.grid);},'__setDefaultDate':function(){var today=new Date();this.date={'year':today.getFullYear(),'month':today.getMonth()+1,'day':today.getDate(),'hour':0,'minute':0,'second':0};},'__import':function(){this.date={};if(this.element.value){this.__importDate(this.options.storeFormat,this.element);}else{this.__setDefaultDate();}},'__importDate':function(format,el){var pairs={};var pattern=format;for(var i in this.patterns){pattern=pattern.replace('%'+i,this.patterns[i]);}
-var regexp=new RegExp(pattern);var value=regexp.exec(el.value);if(value){var format=format.match(/%[a-zA-Z]/g);try{while(format.length){var fmatch=format.pop();var vmatch=value.pop();if(vmatch.match(/^\d+$/)){vmatch=parseInt(vmatch);}
-pairs[fmatch.substr(1)]=vmatch;}
-this.date['year']=$pick(pairs['Y'],0);this.date['month']=$pick(pairs['m'],1);this.date['day']=$pick(pairs['d'],1);this.date['hour']=$pick(pairs['H'],0);this.date['minute']=$pick(pairs['i'],0);this.date['second']=$pick(pairs['s'],0);if(pairs['A']||pairs['a']){if(pairs['h']){this.date['hour']=pairs['h'];if(pairs['A']=='PM'||pairs['a']=='pm'){this.date['hour']+=12;}}}}catch(e){this.__setDefaultDate(el);}}else{this.__setDefaultDate(el);}},'__draw':function(){var cursor=new Date();cursor.setFullYear(this.date['year']);cursor.setMonth(this.date['month']-1);cursor.setDate(1);switch(this.options.variant){case 1:this.components.monthYearInput.value=parseInt(this.date['year'])+'.'+parseInt(this.date['month']);if(!this.components.monthYearInput.value){this.components.monthYearInput.selectedIndex=0;}
-this.components.minuteInput.value=this.date['minute'];this.components.secondInput.value=this.date['second'];if(this.date['hour']>12){this.components.hourInput.value=this.date['hour']-12;this.components.meridianInput.value=1;}else{if(this.date['hour']==0){this.components.hourInput.value=12;}
-this.components.meridianInput.value=0;}
-if(this.options.showHour==false){this.components.hourInput.hide();}
-if(this.options.showMinute==false){this.components.minuteInput.hide();}
-if(this.options.showSecond==false){this.components.secondInput.hide();}
-if(this.options.showMeridiem==false){this.components.meridianInput.hide();}
-break;default:this.__yearWidget.setValue(this.date['year']);this.__monthWidget.setValue(this.date['month']-1);this.__hourWidget.setValue(this.date['hour']);if(this.date['hour']>12){this.__hourWidget.setValue(this.date['hour']%12);this.__meridianWidget.setValue(1);}
-this.__minuteWidget.setValue(this.date['minute']);this.__secondWidget.setValue(this.date['second']);if(!this.options.showHour){this.__hourWidget.element.hide();}
-if(!this.options.showMinute){this.__minuteWidget.element.hide();}
-if(!this.options.showSecond){this.__secondWidget.element.hide();}
-if(!this.options.showMeridiem){this.__meridianWidget.element.hide();}
-break;}
-while(cursor.getDay()!=this.options.firstWeekDay){cursor.setTime(cursor.getTime()-3600*24*1000);}
-if(!this.components.grid.days){var tbody=Widget.tbody();var thead=Widget.thead();this.components.grid.days=[];var tr=Widget.tr();for(var i=0;i<7;i++){var td=Widget.th(null,this.dayNames[this.options.firstWeekDay+i%6].substr(0,3));tr.appendChild(td);}
-thead.appendChild(tr);this.components.grid.appendChild(thead);for(var j=0;j<6;j++){var tr=Widget.tr({'class':'days'});for(var i=0;i<7;i++){var td=Widget.td(null,'-');this.components.grid.days.push(td);tr.appendChild(td);}
-tbody.appendChild(tr);}
-this.components.grid.appendChild(tbody);this.components.frame.appendChild(this.components.grid);}
-var month=false;var today=null;var first=null;for(var i=0;i<this.components.grid.days.length;i++){var day=cursor.getDate();var td=this.components.grid.days[i];if(day==1){month=!month;}
-if(month){if(!first){first=td;}
-if(day==this.date['day']){today=td;}
-td.className='day';td.store('value',day);}else{td.className='';}
-td.innerHTML=day;cursor.setTime(cursor.getTime()+3600*24*1000);}
-if(!today){today=first;}
-this.pointer=today;this.pointer.className='today';this.__export();}});
+var Calendar = new Class({
+  
+  'Implements': [ Control ],
+
+  'initialize': function(el, options) {
+
+    this.options = {
+      'variant':        0,
+      'blank':          false,
+      'displayFormat':  '%Y-%m-%d', 
+      'storeFormat':    '%Y-%m-%d',
+      'showHour':       false,
+      'showMinute':     false,
+      'showSecond':     false,
+      'showMeridiem':   false,
+      'firstWeekDay':   1,
+      'minYear':        new Date().getFullYear()-1,
+      'maxYear':        new Date().getFullYear()+3
+    }
+
+    // deprecated option
+    if (options.format) {
+      options.storeFormat = options.displayFormat = options.format;
+    }
+
+    this.setMainElement(el);
+
+    this.setOptions(options);
+
+    this.__import();
+
+    this.__buildComponents();
+
+    this.__draw();
+
+    if (this.options.blank && this.element.value == '') {
+      this.components.clone = '';
+    }
+
+    this.__bindEvents();
+  },
+
+  '__zeroize': function(val) {
+    val = new String(val);
+    while (val.length < 2) {
+      val = '0'+val;
+    }
+    return val;
+  },
+
+  'hide': function() {
+    this.components.toolbox.hide();
+  },
+  
+  'show': function() {
+    this.components.toolbox.show();
+  },
+
+  'dayNames': [
+    __('Sunday'),
+    __('Monday'),
+    __('Tuesday'),
+    __('Wednesday'),
+    __('Thursday'),
+    __('Friday'),
+    __('Saturday')
+  ],
+
+  'monthNames': [
+      __('January'),
+      __('February'),
+      __('March'),
+      __('April'),
+      __('May'),
+      __('June'),
+      __('July'),
+      __('August'),
+      __('September'),
+      __('October'),
+      __('November'),
+      __('December')
+   ],
+
+  'patterns': {
+    'Y': '(\\d{4})',
+    'm': '(\\d{2})',
+    'd': '(\\d{2})',
+    'H': '(\\d{2})',
+    'i': '(\\d{2})',
+    's': '(\\d{2})',
+    'j': '(\\d+)',
+    'g': '(\\d+)',
+    'h': '(\\d+)',
+    'n': '(\\d+)',
+    'k': '(\\d+)',
+    'z': '(\\d+)',
+    'a': '([apm]+)',
+    'G': '(\\d+)',
+    'A': '([APM]+)'
+  },
+
+  '__export': function() {
+
+    this.__exportDate(this.options.displayFormat, this.components.clone);
+    this.__exportDate(this.options.storeFormat,   this.element);
+
+    if (this.element.onchange) {
+      this.element.onchange(this.element);
+    }
+  },
+  
+  '__exportDate': function(format, el) {
+
+    this.__map = {
+      // Year
+      'Y': new Number(this.date['year']),
+      // Month without leading zeros
+      'n': new Number(this.date['month']),
+      // Numeric day of the month without leading zeros (1 ~ 31)
+      'j': new Number(this.date['day']),
+      // 24-hour format of an hour without leading zeros (1 ~ 24)
+      'G': new Number(this.date['hour']),
+      // Minutes without leading zeros
+      'k': new Number(this.date['minute']),
+      // Seconds without leading zeros
+      'z': new Number(this.date['second']),
+      // Lower case AM or PM
+      'a': this.components.meridianInput.value == 1 ? 'pm' : 'am'
+    }
+
+    this.__map['g'] = this.__map['G'];
+
+    if (this.__map['G'] > 12) {
+      this.__map['a'] = 'pm';
+      this.__map['g'] -= 12;
+    }
+
+    $extend(
+      this.__map,
+      {
+        // Day of the month with leading zeros
+        'd': this.__zeroize(this.__map['j']),
+        // Numeric month with leading zeros
+        'm': this.__zeroize(this.__map['n']),
+        // 24-hour format of an hour with leading zeros
+        'H': this.__zeroize(this.__map['G']),
+        // 12-hour format of an hour with leading zeros
+        'h': this.__zeroize(this.__map['g']),
+        // Minutes with leading zeros
+        'i': this.__zeroize(this.__map['k']),
+        // Seconds with leading zeros
+        's': this.__zeroize(this.__map['z']),
+        // Uppercase AM or PM
+        'A': this.__map['a'].toUpperCase()
+      }
+    );
+
+    var result = format;
+    for (var i in this.__map) {
+      if (result.match('%'+i)) {
+        switch (i) {
+          case 'H': case 'h':
+            this.options.showHour = true;
+          break;
+          case 'i': case 'k':
+            this.options.showMinute = true;
+          break;
+          case 's': case 'z': 
+            this.options.showSecond = true;
+          break;
+          case 'a': case 'A':
+            this.options.showMeridiem = true;
+          break;
+        }
+        result = result.replace('%'+i, this.__map[i]);
+      }
+    }
+
+    el.value = result;
+  },
+
+  '__monthYearInputChange': function() {
+    var data = this.components.monthYearInput.value.split('.');
+    this.date['year']   = parseInt(data[0]);
+    this.date['month']  = parseInt(data[1]);
+    this.__draw();
+  },
+  
+  '__yearInputChange': function() {
+    this.date['year']   = parseInt(this.components.yearInput.value);
+    this.__draw();
+  },
+  
+  '__monthInputChange': function() {
+    this.date['month']   = parseInt(this.components.monthInput.value)+1;
+    this.__draw();
+  },
+
+  '__hourInputChange': function() {
+    this.date['hour']   = parseInt(this.components.hourInput.value);
+    if (this.components.meridianInput.value == 1) {
+      this.date['hour'] = (this.date['hour'] + 12)%24;
+    }
+    this.__draw();
+  },
+
+  '__minuteInputChange': function() {
+    this.date['minute'] = parseInt(this.components.minuteInput.value);
+    this.__draw();
+  },
+
+  '__secondInputChange': function() {
+    this.date['second'] = parseInt(this.components.secondInput.value);
+    this.__draw();
+  },
+
+  '__meridianInputChange': function() {
+    if (this.components.meridianInput.value == 1) {
+      this.date['hour'] = (this.date['hour'] + 12)%24;
+    } else {
+      this.date['hour'] = (this.date['hour'] - 12)%24;
+    }
+    this.__draw();
+  },
+
+  '__buttonNextClick': function() {
+    switch (this.options.variant) {
+      case 1:
+        var o = this.components.monthYearInput.value;
+        var t = o.split('.');
+        t[1] = parseInt(t[1])+1;
+        if (t[1] > 11) {
+          t[0] = parseInt(t[0])+1;
+          t[1] = 0;
+        }
+        this.components.monthYearInput.value = t.join('.');
+        if (!this.components.monthYearInput.value) {
+          this.components.monthYearInput.value = o;
+        }
+        this.components.monthYearInput.fireEvent('change');
+      break;
+      default:
+        this.__monthWidget.up();
+        if (this.__monthWidget.getValue() == 0) {
+          this.__yearWidget.up();
+        }
+      break;
+    }
+  },
+
+  '__buttonPrevClick': function() {
+    switch (this.options.variant) {
+      case 1:
+        var o = this.components.monthYearInput.value;
+        var t = o.split('.');
+        t[1] = parseInt(t[1])-1;
+        if (t[1] < 0) {
+          t[0] = parseInt(t[0])-1;
+          t[1] = 0;
+        }
+        this.components.monthYearInput.value = t.join('.');
+        if (!this.components.monthYearInput.value) {
+          this.components.monthYearInput.value = o;
+        }
+        this.components.monthYearInput.fireEvent('change');
+      break;
+      default:
+        this.__monthWidget.down();
+        if (this.__monthWidget.getValue() == 11) {
+          this.__yearWidget.down();
+        }
+      break;
+    }
+  },
+
+  '__buttonTodayClick': function() {
+    this.__setDefaultDate();
+    this.__draw();
+  },
+
+  '__elementFocus': function(e) {
+    e = new Event(e);
+
+    if (!this.components.toolbox) {
+      this.components.toolbox = new Toolbox(
+        this.components.container,
+        {
+          'enableDrag': false
+        }
+      );
+    }
+
+    var pos = $(e.target).getPosition();
+
+    this.components.toolbox.moveTo(pos.y, pos.x);
+
+    this.components.clone.blur();
+    
+    if (Browser.Engine.trident) {
+      this.__draw();
+    }
+    
+    this.components.toolbox.resizeTo(this.element.offsetWidth, this.element.offsetHeight);
+    
+    this.show();
+  },
+
+  '__buttonBlankClick': function() {
+    this.components.clone.value    = ''; 
+    this.element.value  = ''; 
+    this.hide();
+  },
+
+  '__buttonCloseClick': function() {
+    this.hide();
+  },
+
+  '__frameMouseDown': function(e) {
+    e = new Event(e);
+
+    var parent = $(e.target).findParentWithName('td');
+
+    if (parent && parent.retrieve('value')) {
+
+      this.pointer.className = 'day';
+
+      this.pointer = parent;
+      this.pointer.className = 'today';
+
+      this.date['day'] = parent.retrieve('value');
+
+      this.__export();
+      this.hide();
+    }
+  },
+
+  '__bindEvents': function() {
+
+    switch (this.options.variant) {
+      case 1:
+
+        this.addListener(
+          this.components.monthYearInput,
+          'change',
+          this.__monthYearInputChange
+        );
+
+        this.addListener(
+          this.components.hourInput,
+          'change',
+          this.__hourInputChange
+        );
+
+        this.addListener(
+          this.components.minuteInput,
+          'change',
+          this.__minuteInputChange
+        );
+
+        this.addListener(
+          this.components.secondInput,
+          'change',
+           this.__secondInputChange
+        );
+
+        this.addListener(
+          this.components.meridianInput,
+          'change',
+          this.__meridianInputChange
+        );
+      break;
+    }
+
+    this.addListener(
+      this.components.buttonNext,
+      'click',
+      this.__buttonNextClick
+    );
+
+    this.addListener(
+      this.components.buttonPrev,
+      'click',
+      this.__buttonPrevClick
+    );
+
+    this.addListener(
+      this.components.buttonToday,
+      'click',
+      this.__buttonTodayClick
+    );
+    
+    this.addListener(
+      this.components.buttonBlank,
+      'click',
+      this.__buttonBlankClick
+    );
+
+    this.addListener(
+      this.components.clone,
+      'focus',
+      this.__elementFocus
+    );
+
+    this.addListener(
+      this.components.frame,
+      'mousedown',
+      this.__frameMouseDown
+    );
+  },
+  
+  '__buildComponents': function() {
+
+    this.components = {
+      'container':    Widget.table({'class': 'm-calendar'}),
+      'date':         Widget.div({ 'class': 'date' }),
+      'buttonPrev':   Widget.div({'class': 'm-control'}, Widget.fromHTML('&laquo;')),
+      'buttonNext':   Widget.div({'class': 'm-control'}, Widget.fromHTML('&raquo;')),
+      'buttonBlank':  Widget.button({'class': 'm-form-button'}, __('Clear')),
+      'buttonClose':  Widget.button({'class': 'm-form-button m-button-close'}, __('Close')),
+      'buttonToday':  Widget.button({'class': 'm-form-button'}, __('Today')),
+      
+      'frame':        Widget.div({ 'class': 'm-frame' }),
+      'grid':         Widget.table({ 'class': 'grid' }),
+
+      'buttons':      Widget.div({'class': 'buttons'}),
+      
+      'clone':        this.element.cloneNode(true)
+    };
+
+    this.components.clone.removeAttribute('id');
+    this.components.clone.removeAttribute('name');
+
+    this.element.parentNode.insertBefore(this.components.clone, this.element);
+    
+    this.components.clone.setProperty('readonly', 'readonly');
+
+    this.element.hide();
+
+    switch (this.options.variant) {
+      case 1:
+        $extend(
+          this.components,
+          {
+            'monthYearInput': Widget.select({'class': 'm-form-input'}),
+            'hourInput':      Widget.select({'class': 'm-form-input'}),
+            'minuteInput':    Widget.select({'class': 'm-form-input'}),
+            'meridianInput':  Widget.select({'class': 'm-form-input'}),
+            'secondInput':    Widget.select({'class': 'm-form-input'})
+          }
+        );
+      break;
+      default:
+        $extend(
+          this.components,
+          {
+            'yearInput':      Widget.input({'class': 'm-form-input', 'size': 4, 'maxlength': 4}),
+            'monthInput':     Widget.input({'class': 'm-form-input', 'size': 3, 'maxlength': 3}),
+            'hourInput':      Widget.input({'class': 'm-form-input', 'size': 2, 'maxlength': 2}),
+            'minuteInput':    Widget.input({'class': 'm-form-input', 'size': 2, 'maxlength': 2}),
+            'meridianInput':  Widget.input({'class': 'm-form-input', 'size': 2, 'maxlength': 2}),
+            'secondInput':    Widget.input({'class': 'm-form-input', 'size': 2, 'maxlength': 2})
+          }
+        );
+      break;
+    }
+
+    this.components.container.appendChildren(
+      [
+        Widget.thead(
+          {'class': 'head'},
+          Widget.tr(
+            null,
+            function() {
+              var els = [];
+              els.push(Widget.td({style: {textAlign: 'left', verticalAlign: 'middle'}}, this.components.buttonPrev));
+              switch (this.options.variant) {
+                case 1:
+                  els.push(Widget.td({colspan: 2, style: {textAlign: 'center'}}, this.components.monthYearInput));
+                break;
+                default:
+                  els.push(Widget.td({style: {textAlign: 'center'}}, this.components.monthInput));
+                  els.push(Widget.td({style: {textAlign: 'center'}}, this.components.yearInput));
+                break;
+              }
+              els.push(Widget.td({style: {textAlign: 'right', verticalAlign: 'middle'}}, this.components.buttonNext));
+              return els;
+            }.bind(this).call()
+          )
+        ),
+        Widget.tbody(
+          {'class': 'body'},
+          [
+            Widget.tr(
+              {'class': 'main', style: {textAlign: 'center'}},
+              Widget.td(
+                {colspan: 4},
+                this.components.frame
+              )
+            ),
+            Widget.tr(
+              {'class': 'head'},
+              [
+                Widget.td(null, this.components.hourInput),
+                Widget.td(null, this.components.minuteInput),
+                Widget.td(null, this.components.secondInput),
+                Widget.td(null, this.components.meridianInput)
+              ]
+            ),
+            Widget.tr(
+              null,
+              [
+                Widget.td({colspan: 4 }, [
+                  //this.components.buttonClose,
+                  this.components.buttonBlank,
+                  this.components.buttonToday
+                ])
+              ]
+            )
+          ]
+        )
+      ]
+    );
+
+    switch (this.options.variant) {
+      case 1:
+        for (var y = this.options.minYear; y <= this.options.maxYear; y++) {
+          for (var m = 0; m < 12; m++) {
+            this.components.monthYearInput.appendChild(
+              Widget.option({value: y+'.'+m}, this.monthNames[m].substr(0, 3)+' '+y)
+            );
+          }
+        }
+        for (var i = 0; i < 60; i++) {
+          this.components.minuteInput.appendChild(
+            Widget.option({value: i}, i < 10 ? '0'+i: i)
+          );
+          this.components.secondInput.appendChild(
+            Widget.option({value: i}, i < 10 ? '0'+i: i)
+          );
+        }
+        for (var i = 1; i <= 12; i++) {
+          this.components.hourInput.appendChild(
+            Widget.option({value: i}, i < 10 ? '0'+i : i)
+          );
+        }
+        this.components.meridianInput.appendChildren([
+          Widget.option({value: 0}, 'AM'),
+          Widget.option({value: 1}, 'PM')
+        ]);
+      break;
+      default:
+        this.__yearWidget = new Spinbutton(
+          this.components.yearInput,
+          {
+            'defaultValue': this.date['year'],
+            'minValue': this.options.minYear,
+            'maxValue': this.options.maxYear,
+            'step':     1,
+            'onChange': this.__yearInputChange.bind(this)
+          }
+        );
+
+        this.__monthWidget = new Spinbutton(
+          this.components.monthInput,
+          {
+            'values': function() {
+              var values = [];
+              for (var i = 0; i < 12; i++) {
+                values[i] = this.monthNames[i].substr(0, 3);
+              }
+              return values;
+            }.bind(this).call(),
+            'cycle': true,
+            'onChange': this.__monthInputChange.bind(this)
+          }
+        );
+
+        this.__hourWidget = new Spinbutton(
+          this.components.hourInput,
+          {
+            'minValue': 1,
+            'maxValue': 12,
+            'defaultValue': 12,
+            'values': function() {
+              var hours = [];
+              for (var i = 1; i <= 12; i++) {
+                hours[i] = new String(i < 10 ? '0'+i : i);
+              }
+              return hours; 
+            }.call(),
+            'cycle': true,
+            'onChange': this.__hourInputChange.bind(this)
+          }
+        );
+        
+        this.__minuteWidget = new Spinbutton(
+          this.components.minuteInput,
+          {
+            'values': function() {
+              var m = [];
+              for (var i = 0; i < 60; i++)
+                m[i] = new String(i < 10 ? '0'+i : i);
+              return m; 
+            }.call(),
+            'cycle': true,
+            'onChange': this.__minuteInputChange.bind(this)
+          }
+        );
+        
+        this.__secondWidget = new Spinbutton(
+          this.components.secondInput,
+          {
+            'values': function() {
+              var m = [];
+              for (var i = 0; i < 60; i++) {
+                m[i] = new String(i < 10 ? '0'+i : i);
+              }
+              return m; 
+            }.call(),
+            'step':   5,
+            'cycle': true,
+            'onChange': this.__secondInputChange.bind(this)
+          }
+        );
+        
+        this.__meridianWidget = new Spinbutton(
+          this.components.meridianInput,
+          {
+            'values': [
+             'AM',
+             'PM'
+            ],
+            'cycle': true,
+            'defaultValue': 0,
+            'onChange': this.__meridianInputChange.bind(this)
+          }
+        );
+      break;
+    }
+
+    this.components.frame.appendChild(this.components.grid);
+  },
+
+  '__setDefaultDate': function() {
+    var today = new Date();
+    this.date = {
+      'year':   today.getFullYear(),
+      'month':  today.getMonth()+1,
+      'day':    today.getDate(),
+      'hour':   0,
+      'minute': 0,
+      'second': 0
+    };
+  },
+
+  '__import': function() {
+    this.date = {};
+    if (this.element.value) {
+      this.__importDate(this.options.storeFormat, this.element);
+    } else {
+      this.__setDefaultDate();
+    }
+  },
+
+  '__importDate': function(format, el) {
+
+    var pairs   = {};
+    var pattern = format;
+
+    // expading pattern
+    for (var i in this.patterns) {
+      pattern = pattern.replace('%'+i, this.patterns[i]);
+    }
+
+    var regexp  = new RegExp(pattern);
+    var value   = regexp.exec(el.value);
+
+    if (value) {
+      
+      var format = format.match(/%[a-zA-Z]/g);
+
+      try {
+
+        while (format.length) {
+          var fmatch  = format.pop();
+          var vmatch  = value.pop();
+          if (vmatch.match(/^\d+$/)) {
+            vmatch = parseInt(vmatch);
+          }
+          pairs[fmatch.substr(1)] = vmatch;
+        }
+
+        this.date['year']   = $pick(pairs['Y'],   0);
+        this.date['month']  = $pick(pairs['m'],   1);
+        this.date['day']    = $pick(pairs['d'],   1);
+        this.date['hour']   = $pick(pairs['H'],   0);
+        this.date['minute'] = $pick(pairs['i'],   0);
+        this.date['second'] = $pick(pairs['s'],   0);
+
+        if (pairs['A'] || pairs['a']) {
+          if (pairs['h']) {
+            this.date['hour'] = pairs['h'];
+            if (pairs['A'] == 'PM' || pairs['a'] == 'pm') {
+              this.date['hour'] += 12;
+            }
+          }
+        }
+
+      } catch(e) {
+        this.__setDefaultDate(el);
+      }
+
+    } else {
+      this.__setDefaultDate(el);
+    }
+  },
+
+  '__draw': function() {
+
+    var cursor = new Date();
+
+    cursor.setFullYear(this.date['year']);
+    cursor.setMonth(this.date['month']-1);
+    cursor.setDate(1);
+
+    switch (this.options.variant) {
+      case 1:
+        this.components.monthYearInput.value  = parseInt(this.date['year'])+'.'+parseInt(this.date['month']);
+        
+        if (!this.components.monthYearInput.value) {
+          this.components.monthYearInput.selectedIndex = 0;
+        }
+
+        this.components.minuteInput.value     = this.date['minute'];
+        this.components.secondInput.value     = this.date['second'];
+
+        if (this.date['hour'] > 12) {
+          this.components.hourInput.value     = this.date['hour']-12;
+          this.components.meridianInput.value = 1;
+        } else {
+          if (this.date['hour'] == 0) {
+            this.components.hourInput.value = 12;
+          }
+          this.components.meridianInput.value = 0;
+        }
+
+        if (this.options.showHour == false) {
+          this.components.hourInput.hide();        
+        }
+        if (this.options.showMinute == false) {
+          this.components.minuteInput.hide();        
+        }
+        if (this.options.showSecond == false) {
+          this.components.secondInput.hide();        
+        }
+        if (this.options.showMeridiem == false) {
+          this.components.meridianInput.hide();        
+        }
+      break;
+      default:
+        this.__yearWidget.setValue(this.date['year']);
+        this.__monthWidget.setValue(this.date['month']-1);
+        this.__hourWidget.setValue(this.date['hour']);
+
+        if (this.date['hour'] > 12) {
+          this.__hourWidget.setValue(this.date['hour']%12);
+          this.__meridianWidget.setValue(1);
+        }
+
+        this.__minuteWidget.setValue(this.date['minute']);
+        this.__secondWidget.setValue(this.date['second']);
+
+        if (!this.options.showHour) {
+          this.__hourWidget.element.hide();
+        }
+        if (!this.options.showMinute) {
+          this.__minuteWidget.element.hide();
+        }
+        if (!this.options.showSecond) {
+          this.__secondWidget.element.hide();
+        }
+        if (!this.options.showMeridiem) {
+          this.__meridianWidget.element.hide();
+        }
+      break;
+    }
+   
+    // moving to the first day of the week
+    while (cursor.getDay() != this.options.firstWeekDay) {
+      cursor.setTime(cursor.getTime()-3600*24*1000);
+    }
+
+    // creating table
+    if (!this.components.grid.days) {
+      var tbody = Widget.tbody();
+      var thead = Widget.thead();
+
+      this.components.grid.days = [];
+
+      // week days
+      var tr = Widget.tr();
+      for (var i = 0; i < 7; i++) {
+        var td = Widget.th(null, this.dayNames[this.options.firstWeekDay + i%6].substr(0, 3));
+        tr.appendChild(td);
+      }
+      thead.appendChild(tr);
+      this.components.grid.appendChild(thead);
+
+      // month days
+      for (var j = 0; j < 6; j++) {
+        var tr = Widget.tr({'class': 'days'});
+        for (var i = 0; i < 7 ; i++) {
+          var td = Widget.td(null, '-');
+          this.components.grid.days.push(td);
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      }
+
+      this.components.grid.appendChild(tbody);
+      this.components.frame.appendChild(this.components.grid); 
+    }
+
+    var month = false;
+    var today = null;
+    var first = null;
+
+    for (var i = 0; i < this.components.grid.days.length; i++) {
+
+      var day = cursor.getDate();
+      var td  = this.components.grid.days[i];
+
+      // in month?
+      if (day == 1) {
+        month = !month;
+      }
+
+      if (month) {
+        if (!first) {
+          first = td;
+        }
+        if (day == this.date['day']) {
+          today = td;
+        }
+        td.className = 'day';
+        td.store('value', day);
+      } else {
+        td.className = '';
+      }
+
+      td.innerHTML = day;
+
+      cursor.setTime(cursor.getTime()+3600*24*1000);
+    }
+
+    if (!today) {
+      today = first; 
+    }
+
+    this.pointer = today;
+    this.pointer.className = 'today';
+
+    /*
+    if (Browser.Engine.trident) {
+      // ie hack (it does not render table changes)
+      var iesucks = Widget.div(null, this.components.grid);
+      this.components.frame.dumpChildren();
+      this.components.frame.innerHTML = iesucks.innerHTML;
+    }
+    */
+
+    this.__export();
+  }
+
+});

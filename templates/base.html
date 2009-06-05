@@ -12,21 +12,28 @@
             <div class="left">
                 <div id="sitename">pkdb</div>
                 <div id="tagline">find it...install it...<em>booya!</em></div>
+                {% block auth%}
 				<div id="auth-buttons">
-				{% if not user.is_authenticated %}
-				
-					<button onclick ="showDialogLogin()"> Sign In </button>
-					<button>Sign Up</button>
-				
-				{% else %}
-						Welcome: {{ user.username }} <button onclick ="location.href='{% url fl.auth.views.logout %}'">LogOut</button>
-				{% endif %}
-				</div>
+                    {% if not user.is_authenticated %}
+                    
+                        <button onclick ="location.href='{% url fl.auth.views.login %}'"> Sign In </button>
+                        <button>Sign Up</button>
+                    
+                    {% else %}
+                            Welcome: <a href="{% url fl.auth.views.profile %}">{{ user.username }}</a>
+                            <a href="#" onclick ="location.href='{% url fl.auth.views.logout %}'">Log Out</a>
+                    {% endif %}
+                    				</div>
+
+                    {% endblock %}
+
             </div>
         </div>
         <div id="main">
+           
             {% block content %}
             {% endblock %}
+          
         </div>
         <div id="footer">
             <p>pkdb loves open source &middot; powered by django</p>

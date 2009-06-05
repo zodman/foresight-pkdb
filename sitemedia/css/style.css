@@ -73,7 +73,14 @@ label {
     font-size:small;
 }
 
-ul.errorlist li  {
-    font-size:small;
-    margin-bottom:0px;
+ul.errorlist   {
+    padding:5px;
+    font-size: small;
+    margin-bottom:5px;
+    margin-left:10px;
+}
+table ,th, td,tr{
+   border-collapse: separate;
+    padding:0px;
+    margin:0px;
 }

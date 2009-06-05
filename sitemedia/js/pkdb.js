@@ -1,17 +1,17 @@
-Meteora.showDebug(true);
+Meteora.showDebug(1);
 Meteora.uses('Meteora.Autocomplete');
 Meteora.uses('Meteora.Dialog');
 Meteora.uses('Meteora.Bubble');
 Meteora.uses('Meteora.Form');
 Meteora.uses('Meteora.Jsonrpc');
-Meteora.uses('Meteora.Dock');
+Meteora.uses('Meteora.Notebook');
 
 showDialogLogin = function () {
-	Meteora.overlay();
+	//Meteora.overlay();
 	var dia = new Dialog(
 		{'url':'/accounts/login/'},
 		{
-			'height':150,
+			'height':170,
 			'width':360,
 			'onClose': function () {
 				Meteora.removeOverlay();
