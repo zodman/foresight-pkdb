@@ -3,7 +3,18 @@
 {% block content %}
 
 <div id="left">
-<h1>Profile </h1>
+<h1>Profile  </h1>
+    <div>
+    <h3> Group </h3>
+        {% if profile.is_developer %}
+           <span> Developer </span>
+        {% endif %}
+
+        {% if profile.is_community %}
+            <span> Community </span>
+        {% endif %}
+    </div>
+    <br>
     <div id ="nbProfile"></div>
 </div>
 <script lang="javascript">

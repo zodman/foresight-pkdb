@@ -17,7 +17,7 @@ div#footer {
   border-top: 1px solid grey;
   padding-top: 10px;
   margin-top: 20px;
-} 
+}
 
 #sitename {
   font-size: 36px;
@@ -38,12 +38,12 @@ div#footer {
   width: 260px;
 }
 
-.initialInputText { 
+.initialInputText {
   color: grey;
 }
 
 a,
-a.link, 
+a.link,
 a.active {
   color: #369;
 }
@@ -64,6 +64,10 @@ a.active {
 h4{
     margin-left:30px;
 }
+h3, h2 {
+    margin: 0px;
+}
+
 #auth-form {
 	margin-right:0px;
 	margin-left:auto;
@@ -83,4 +87,7 @@ table ,th, td,tr{
    border-collapse: separate;
     padding:0px;
     margin:0px;
+}
+.ident {
+    margin-left:10px;
 }

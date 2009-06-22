@@ -1,12 +1,9 @@
+{% load package_tag %}
 
 <h2>
     Packages owned
 </h2>
-<h2>
-    Packages waiting for developer approved
-</h2>
-<h2>
-    Packages waiting for developer approved
-</h2>
-<div>
-</div>
+    {% for package in profile.packages.all%}
+        <a href="{% url fl.packages.views.package package.name %}">{{ package.name }}</a> - {{package.summary}} - status:{{package.status|status}}
+    {% endfor%}
+

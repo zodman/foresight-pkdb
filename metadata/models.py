@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib import admin
 
+
 class Summary(models.Model):
     value = models.TextField()
 

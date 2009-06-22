@@ -7,9 +7,11 @@ def mydir():
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-AUTH_PROFILE_MODULE="auth.models"
+
+AUTH_PROFILE_MODULE="profiles.profile"
+
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+     ('zodman', 'zodman@foresightlinux.org'),
 )
 
 MANAGERS = ADMINS
