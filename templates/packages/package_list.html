@@ -1,5 +1,4 @@
-{% extends "list.html"%}
-{% block list_packages %}
+
     {% with object_list as packages %}
         {% if packages %}
             {% for pkg in packages  %}
@@ -16,6 +15,6 @@
             <p>Nothing found.</p>
         {% endif %}
     {% endwith %}
-{% endblock %}
+
 
 

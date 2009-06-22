@@ -1,12 +1,11 @@
-{% extends "details.html"%}
 
-{% block  details %}
 
-{% with object as package %}
 <h1>{{ package.name }} :: <img title="rating" src="/sitemedia/images/5.png" /></h1>
 
-{% if  package.summary %} 
-    <p>{{ package.summary }} </p>
+
+{% if  package.summary %}
+    <h2>Summary </h2>
+    <p class="ident">{{ package.summary }} </p>
 {% endif %}
 
 {% if package.url %}
@@ -15,34 +14,28 @@
 </p>
 <p>
    {% if package.description %}
-   
-    {{ package.description }}
+
+    <p class="ident">    {{ package.description }}</p>
    {% endif %}
-   
+
 </p>
 <!--We really need to take distribution into account here-->
 <p>
+<!--
 <object type="application/x-packagekit-plugin" width="300" height="50" class="packagekit-plugin">
     {% if  package.summary %}
         <param name="displayname" value="{{package.summary}}"/>
     {% endif %}
     <param name="packagenames" value="{{package.name}}"/>
 </object>
-
-<h3>Rating</h3>
-<p>
-    <h4>Summary</h4> 
-    {% for r in package.ratingsummary_set.all %}
-        {{ r|pprint }} <br>
-    {% endfor %}
-   <h4>Description</h4> 
-   <h4>Categories</h4> 
-</p>
-
+-->
 <h3>Comments:</h3>
-<p>Some user submitted comments go here</p>
+    <p>
+        Some user submitted comments go here
+    </p>
 </p>
 
 </div>
-{% endwith %}
-{% endblock %}
+
+
+

@@ -1,0 +1,22 @@
+{% extends "details.html"%}
+
+{% block  details %}
+aaaaaaaa
+<div id='nbPackage'></div>
+
+<script type="text/javascript">
+    var nb  = new Notebook('nbPackage', { forceUpdate:true, allowBookmark:true});
+    nb.addPage(
+        { 'id':'index', 'title':'{{ object.name }}'},
+        { 'url':'{% url fl.packages.views.package_main object.name %}'}
+    );
+
+    document.nbPackage = nb;
+</script>
+
+<h3>Comments:</h3>
+    <p>
+        Some user submitted comments go here
+    </p>
+</p>
+{% endblock %}

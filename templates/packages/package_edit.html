@@ -1,0 +1,21 @@
+<h2>Permision </h2>
+{% if profile.is_community %}
+    <!--
+    Community can write metadata
+    -->
+{% endif %}
+
+{% if profile.is_developer %}
+    <!--
+        Developer can change status of package
+    -->
+    <p class="ident">
+        <div  class="ident" id="developerForm">
+            <form onsubmit="return submitForm(this)" method="post" action="{% url fl.packages.views.package object.name %}">
+            <table>
+                {{statusform}}
+            </table>
+                <input type="submit" value="Change">
+        </div>
+    </p>
+{% endif %}
