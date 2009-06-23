@@ -25,3 +25,10 @@ showDialogLogin = function () {
 showDock = function () {
 	var dock = new Dock();
 }
+
+editPackage = function ( package_name, url ) {
+    var nb = document.nbPackage;
+    nb.addPage({  title:'Edit', id:'edit'}, { 'url': url }, {allowClose:true});
+    nb.selectPage("edit");
+    document.nbPackage = nb;
+}

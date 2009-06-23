@@ -1,5 +1,12 @@
 from django import forms
-from fl.packages.models import STATUS
+from fl.packages.models import STATUS, Package
 
 class StatusForm(forms.Form):
     status = forms.ChoiceField(label ="Change Status",choices = STATUS )
+
+class PackageForm(forms.ModelForm):
+    description = forms.CharField(widget= forms.Textarea )
+    summary = forms.CharField(widget = forms.Textarea )
+    class Meta:
+        model = Package
+        exclude = ("status",)

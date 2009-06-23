@@ -91,3 +91,11 @@ table ,th, td,tr{
 .ident {
     margin-left:10px;
 }
+
+span.href, span.a {
+    cursor:pointer;
+    color:blue;
+}
+.right {
+    text-align:right;
+}

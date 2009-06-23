@@ -15,12 +15,19 @@
                 {% block auth%}
 				<div id="auth-buttons">
                     {% if not user.is_authenticated %}
-                    
+
                         <button onclick ="location.href='{% url fl.auth.views.login %}'"> Sign In </button>
                         <button>Sign Up</button>
-                    
+
                     {% else %}
-                            Welcome: <a href="{% url fl.auth.views.profile %}">{{ user.username }}</a>
+                            Welcome
+                            {% if user.get_profile.is_developer%}
+                                Devel
+                            {% endif %}
+                            {% if user.get_profile.is_community%}
+                                User
+                            {% endif %}
+                                : <a href="{% url fl.auth.views.profile %}">{{ user.username }}</a>
                             <a href="#" onclick ="location.href='{% url fl.auth.views.logout %}'">Log Out</a>
                     {% endif %}
                     				</div>
@@ -30,10 +37,10 @@
             </div>
         </div>
         <div id="main">
-           
+
             {% block content %}
             {% endblock %}
-          
+
         </div>
         <div id="footer">
             <p>pkdb loves open source &middot; powered by django</p>

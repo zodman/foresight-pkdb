@@ -21,9 +21,9 @@ def logout(request):
 
 @login_required
 def profile(request):
-    profile = request.user.get_profile()
+
     return render_to_response("registration/profile.html",
-        {"profile": profile },context_instance=RequestContext(request))
+        { },context_instance=RequestContext(request))
 
 
 def register(request):

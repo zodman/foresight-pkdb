@@ -1,7 +1,12 @@
-
+{% with object as package %}
 
 <h1>{{ package.name }} :: <img title="rating" src="/sitemedia/images/5.png" /></h1>
 
+{% if  user.get_profile.is_developer or user.get_profile.is_community %}
+<div class="right">
+    <span class="href" onclick="editPackage('{{package.name}}','{% url fl.packages.views.package_edit package.name %}')"> Editar </span>
+</div>
+{% endif %}
 
 {% if  package.summary %}
     <h2>Summary </h2>
@@ -29,13 +34,9 @@
     <param name="packagenames" value="{{package.name}}"/>
 </object>
 -->
-<h3>Comments:</h3>
-    <p>
-        Some user submitted comments go here
-    </p>
-</p>
+
 
 </div>
 
-
+{% endwith %}
 

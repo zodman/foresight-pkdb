@@ -13,7 +13,7 @@ def list(request):
 
 def index(request, package_name):
     package = get_object_or_404(Package, name = package_name)
-    return direct_to_template(request, template="packages/package_index.html", extra_content={'object': package} )
+    return direct_to_template(request, template="packages/package_index.html", extra_context={'object': package} )
 
 
 def package_main(request, package_name):
@@ -29,14 +29,16 @@ def package_edit( request, package_name ):
     #assert False, package_name
     package = get_object_or_404(Package, name = package_name)
     profile = request.user.get_profile()
+    if profile.is_community():
+        from fl.packages.forms import PackageForm
+        pkgForm = PackageForm(instance=package)
+    else:
+        pkgForm = None
     if profile.is_developer():
         from fl.packages.forms import StatusForm
         statusForm = StatusForm()
     else:
         statusForm = None
-    return  render_to_response("packages/package_detail.html",
-        {
-            "package": package, "profile": profile,
-            'statusform': statusForm,
-             },
+    return  render_to_response("packages/package_edit.html",
+        { "package": package,'statusform': statusForm,'packageform':pkgForm },
          context_instance=RequestContext(request))
