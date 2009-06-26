@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.databrowse',
     'django.contrib.admin',
+     'django.contrib.comments',
     'fl.profiles',
        'fl.repository',
     'fl.packages',

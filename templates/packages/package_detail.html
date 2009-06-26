@@ -1,11 +1,14 @@
+{%load package_tag %}
 {% with object as package %}
-
 <h1>{{ package.name }} :: <img title="rating" src="/sitemedia/images/5.png" /></h1>
 
 {% if  user.get_profile.is_developer or user.get_profile.is_community %}
 <div class="right">
     <span class="href" onclick="editPackage('{{package.name}}','{% url fl.packages.views.package_edit package.name %}')"> Editar </span>
 </div>
+    <span class="href" onclick="changeStatus('{% url fl.packages.views.package_change_status package.id %}')">
+        Status: <span id="status">{{package.status|status}}</span>
+    </span>
 {% endif %}
 
 {% if  package.summary %}

@@ -21,7 +21,6 @@ def logout(request):
 
 @login_required
 def profile(request):
-
     return render_to_response("registration/profile.html",
         { },context_instance=RequestContext(request))
 

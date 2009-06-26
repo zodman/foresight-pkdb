@@ -83,6 +83,10 @@ ul.errorlist   {
     margin-bottom:5px;
     margin-left:10px;
 }
+ul.errrorlist li {
+    color:red;
+}
+
 table ,th, td,tr{
    border-collapse: separate;
     padding:0px;
