@@ -1,6 +1,8 @@
 {%load package_tag %}
 {% with object as package %}
-<h1>{{ package.name }} :: <img title="rating" src="/sitemedia/images/5.png" /></h1>
+<h1>
+    {{ package.name }} :: <img title="rating" src="/sitemedia/images/5.png" />
+</h1>
 
 {% if  user.get_profile.is_developer or user.get_profile.is_community %}
 <div class="right">
@@ -12,10 +14,9 @@
 {% endif %}
 
 {% if  package.summary %}
-    <h2>Summary </h2>
     <p class="ident">{{ package.summary }} </p>
 {% endif %}
-
+<p>
 {% if package.url %}
     <a href="{{package.url}}" target="_blank"><img border="0" src="/sitemedia/images/go-home.png" /></a>
 {% endif %}
@@ -27,7 +28,12 @@
    {% endif %}
 
 </p>
-<!--We really need to take distribution into account here-->
+<p>
+    {%for cat in package.category.all %}
+        {{cat}}
+    {% endfor%}
+</p>
+
 <p>
 <!--
 <object type="application/x-packagekit-plugin" width="300" height="50" class="packagekit-plugin">
@@ -38,7 +44,7 @@
 </object>
 -->
 
-
+</p>
 </div>
 
 {% endwith %}

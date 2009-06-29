@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from fl.settings import mydir
+from django.views.generic.simple import direct_to_template
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin

@@ -4,7 +4,10 @@
     Packages owned
 </h2>
 
-    {% for package in user.get_profile.packages.all%}
-        <a href="{% url fl.packages.views.index package.name %}">{{ package.name }}</a> - {{package.summary}} - status:{{package.status|status}}
+    {% for package in user.get_profile.packages.all %}
+        <div>
+        <a href="{% url fl.packages.views.index package.name %}">{{ package.name }}</a>
+         - {{package.summary}} - status:{{package.status|status}}
+        </div>
     {% endfor%}
 

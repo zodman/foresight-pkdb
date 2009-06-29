@@ -32,6 +32,12 @@ editPackage = function ( package_name, url ) {
     nb.selectPage("edit");
     document.nbPackage = nb;
 }
-changeStatus = function (  url ){
+
+doAjax = function (url){
     new Ajax(url).rpc()
 }
+changeStatus = function (  url ){
+    doAjax(url)
+}
+
+

@@ -26,6 +26,11 @@ class Package(models.Model):
         for st,val in STATUS:
             if st == self.status:
                 return val
+    def is_user_owned(self):
+        if self.profile_set.count() == 0:
+            return False
+        else:
+            return True
 modelstuple = (
     (Package,None),
 )

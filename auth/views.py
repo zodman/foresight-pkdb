@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.views.generic import simple
-
+from fl.profiles.models import Profile
 
 from meteora import Meteora
 from fl.profiles.models import Profile
@@ -30,14 +30,15 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            p = Profile.objects.create(user=user)
             group_community = get_object_or_404(Group, name = "community")
-            user.group.add(group_community)
+            user.groups.add(group_community)
             m = Meteora(True, "New user: %s register" %user.username)
             m.redirectTo(reverse('fl.auth.views.login'))
             return m.json_response()
         else:
             m = Meteora(False, "Form Invalid")
-            m.form_invalid("div-register", form)
+            m.form_invalid(form)
             return m.json_response()
     else:
         form = UserCreationForm()
@@ -45,7 +46,6 @@ def register(request):
 
 @login_required
 def index(request):
-    user = request.user
-    profile = user.get_profile()
+    profile = request.user.get_profile()
     return render_to_response("registration/index.html",
         {"profile": profile },context_instance=RequestContext(request))

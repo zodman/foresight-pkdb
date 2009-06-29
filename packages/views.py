@@ -2,6 +2,8 @@ from django.views.generic.list_detail import object_list, object_detail
 from django.views.generic.simple import direct_to_template
 from django.template import RequestContext
 from django.shortcuts  import get_object_or_404, render_to_response
+from django.contrib.auth.decorators import login_required
+
 from fl.packages.models import Package
 
 from meteora import Meteora
@@ -42,7 +44,7 @@ def package_edit( request, package_name ):
             return m.json_response()
         else:
             m = Meteora(False,"error")
-            m.form_invalid("communityForm",pkgform)
+            m.form_invalid(pkgform)
             return m.json_response()
     else:
         if profile.is_community():
@@ -54,6 +56,7 @@ def package_edit( request, package_name ):
         return  render_to_response("packages/package_edit.html",
             { "package": package,'statusform': statusForm,'packageform':pkgForm },
              context_instance=RequestContext(request))
+
 def package_change_status(request, package_id ):
     package, success = m_get_or_404(Package, id = package_id)
     if not success:
@@ -69,4 +72,15 @@ def package_change_status(request, package_id ):
     package.save()
     m = Meteora(True, "Status change to: %s" % package.get_status())
     m.update_object("status", package.get_status())
+    return m.json_response()
+
+@login_required
+def package_asign(request, package_id):
+    package, success = m_get_or_404(Package, id = package_id)
+    if not success:
+        return package
+    profile = request.user.get_profile()
+    profile.packages.add(package)
+    m = Meteora(True,"Change the %s to user %s" % (package.name, request.user.username))
+    m.update_object("package_%s" % package.name,"%s" % request.user.username)
     return m.json_response()

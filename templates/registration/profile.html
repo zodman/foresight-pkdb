@@ -5,13 +5,19 @@
 <div id="left">
 <h1>Profile  </h1>
     <div>
-    <h3> Group </h3>
-        {% if profile.is_developer %}
-           <span> Developer </span>
+    <h3> Group owns </h3>
+        {% if user.get_profile.is_developer %}
+           <div>
+            <span> Developer:</span>
+                You can change the status of metadata
+            </div>
         {% endif %}
 
-        {% if profile.is_community %}
-            <span> Community </span>
+        {% if user.get_profile.is_community %}
+            <div>
+            <span> Community: </span>
+                Set metadata
+            </div>
         {% endif %}
     </div>
     <br>

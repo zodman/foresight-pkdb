@@ -6,7 +6,7 @@ from fl.packages.models import Package
 
 class Profile(models.Model):
     user = models.ForeignKey(User, unique=True)
-    packages = models.ManyToManyField(Package)
+    packages = models.ManyToManyField(Package, blank=True, null = True)
 
     def __unicode__(self):
         return self.user.username

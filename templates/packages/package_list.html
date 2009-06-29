@@ -1,21 +1,40 @@
 {% extends "base.html"%}
+{% load package_tag %}
 {%block content%}
     {% with object_list as packages %}
         {% if packages %}
             {% for pkg in packages  %}
                 <dl>
-                    <dt><a href="{% url fl.packages.views.index pkg.name %}">{{ pkg.name }}</a></dt>
+                    <dt>
+                        <a href="{% url fl.packages.views.index pkg.name %}">{{ pkg.name }}</a></dt>
                     {%if pkg.summary %}
                     <dd>
                         {{ pkg.summary }}
                     </dd>
+                    {% endif %}
+
+                    <dd> owned by:
+                    {% if pkg.is_user_owned %}
+                        {% for u in pkg.profile_set.all%} {{u.user.username}} {% endfor %}
+                    {% else %}
+                            {%if user.is_authenticated %}
+                            <span id="package_{{pkg.name}}" class="href"
+                            onclick="doAjax('{% url fl.packages.views.package_asign pkg.id %}')">
+                            None
+                            </span>
+                            {% else %}
+                            None
+                            {% endif %}
                     {% endif%}
+                    </dd>
+                    <dd>
+                        {{pkg.status|status}}
+                    </dd>
                 </dl>
             {% endfor %}
         {% else %}
             <p>Nothing found.</p>
         {% endif %}
     {% endwith %}
-
 {%endblock%}
 
