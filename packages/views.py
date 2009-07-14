@@ -1,7 +1,7 @@
 from django.views.generic.list_detail import object_list, object_detail
+from django.shortcuts import get_object_or_404, render_to_response
+from django.template import RequestContext 
 from django.views.generic.simple import direct_to_template
-from django.template import RequestContext
-from django.shortcuts  import get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
 
 from fl.packages.models import Package
@@ -11,7 +11,7 @@ from meteora import get_object_or_404 as m_get_or_404
 
 def list(request):
     return object_list( request,
-        queryset = Package.objects.all(), paginate_by = 10,
+        queryset = Package.objects.all(), paginate_by = 30,
         template_name = "packages/package_list.html",
         page = request.GET.get("page",0))
 
@@ -57,22 +57,29 @@ def package_edit( request, package_name ):
             { "package": package,'statusform': statusForm,'packageform':pkgForm },
              context_instance=RequestContext(request))
 
+
 def package_change_status(request, package_id ):
     package, success = m_get_or_404(Package, id = package_id)
-    if not success:
-        return package
-    if package.status == 1:
-        package.status = 2
-    elif package.status == 2:
-        package.status = 3
-        if not request.user.get_profile().is_developer():
-           package.status = 1
-    elif package.status == 3:
-        package.status = 1
-    package.save()
-    m = Meteora(True, "Status change to: %s" % package.get_status())
-    m.update_object("status", package.get_status())
-    return m.json_response()
+    if request.method == "POST":
+        if not success:
+            return package
+        if package.status == 1:
+            package.status = 2
+        elif package.status == 2:
+            package.status = 3
+            if not request.user.get_profile().is_developer():
+               package.status = 1
+        elif package.status == 3:
+            package.status = 1
+        package.save()
+        m = Meteora(True, "Status change to: %s" % package.get_status())
+        m.update_object("status", package.get_status())
+        return m.json_response()
+    else:
+        from fl.packages.forms import JiraLoginForm
+        return  render_to_response("packages/package_status_change.html",
+            { 'jiraform':JiraLoginForm(), 'package':package },
+             context_instance=RequestContext(request))
 
 @login_required
 def package_asign(request, package_id):

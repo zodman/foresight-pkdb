@@ -3,7 +3,9 @@
 {%block content%}
     {% with object_list as packages %}
         {% if packages %}
+
             {% for pkg in packages  %}
+                <div style="border: width:200px; height:90px; float:left">
                 <dl>
                     <dt>
                         <a href="{% url fl.packages.views.index pkg.name %}">{{ pkg.name }}</a></dt>
@@ -31,10 +33,27 @@
                         {{pkg.status|status}}
                     </dd>
                 </dl>
+                </div>
             {% endfor %}
         {% else %}
             <p>Nothing found.</p>
         {% endif %}
     {% endwith %}
+
+    <div class="pagination" style="">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
 {%endblock%}
 

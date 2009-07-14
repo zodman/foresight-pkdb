@@ -13,25 +13,36 @@
     </span>
 {% endif %}
 
+    <p class="ident">
 {% if  package.summary %}
-    <p class="ident">{{ package.summary }} </p>
+        {{ package.summary }} 
+{% else%}
+    summary not set
 {% endif %}
+</p>
 <p>
 {% if package.url %}
-    <a href="{{package.url}}" target="_blank"><img border="0" src="/sitemedia/images/go-home.png" /></a>
+    <a href="{{package.url}}" target="_blank">
+        <img border="0" src="/sitemedia/images/go-home.png" /></a>
+        {{package.url}}
 {% endif %}
 </p>
-<p>
+<p class="ident">
    {% if package.description %}
-
-    <p class="ident">    {{ package.description }}</p>
+        {{package.description}}
+    {% else%}
+        Description not set
    {% endif %}
-
 </p>
-<p>
+<p class="ident">
+Categories:
+{% if package.category.all %}
     {%for cat in package.category.all %}
-        {{cat}}
+        {{cat}},
     {% endfor%}
+{% else %}
+    No categories set
+{% endif %}
 </p>
 
 <p>

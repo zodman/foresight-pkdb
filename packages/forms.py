@@ -10,3 +10,6 @@ class PackageForm(forms.ModelForm):
     class Meta:
         model = Package
         exclude = ("status","name")
+class JiraLoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())

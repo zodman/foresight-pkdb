@@ -6,8 +6,15 @@ Meteora.uses('Meteora.Form');
 Meteora.uses('Meteora.Jsonrpc');
 Meteora.uses('Meteora.Notebook');
 
+is_debug = function() {
+   
+   return  Meteora.options.debug.enable
+}
+
 showDialogLogin = function () {
-	//Meteora.overlay();
+    if (!is_debug() ) {
+	    Meteora.overlay();
+    }
 	var dia = new Dialog(
 		{'url':'/accounts/login/'},
 		{
@@ -37,7 +44,24 @@ doAjax = function (url){
     new Ajax(url).rpc()
 }
 changeStatus = function (  url ){
-    doAjax(url)
+
+    if (!is_debug() ) {
+	    Meteora.overlay();
+    }
+
+    	var dia = new Dialog(
+		{'url':url},
+		{
+			'height':300,
+			'width':360,
+			'onClose': function () {
+				Meteora.removeOverlay();
+			}
+		}
+	);
+	dia.center();
+
 }
+
 
 

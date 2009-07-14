@@ -103,3 +103,8 @@ span.href, span.a {
 .right {
     text-align:right;
 }
+
+.nb {
+    width: 100%;
+    height:780px;
+}
